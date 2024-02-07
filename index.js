@@ -2,6 +2,7 @@
 
 // import router.js
 const router = require('./Routes/router')
+const jwtMiddleware= require('./Middlewares/jwtMiddleware')
 
 // 1) import dotenv
 require('dotenv').config()
@@ -23,6 +24,7 @@ pfServer.use(cors())
 
 // 6) use a middleware called express.json()  to convert json data to javascript Object
 pfServer.use(express.json())
+// pfServer.use(jwtMiddleware)
 pfServer.use(router)
 
 // 7) define port number
