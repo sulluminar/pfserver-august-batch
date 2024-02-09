@@ -1,14 +1,15 @@
 
 const jwt = require("jsonwebtoken");
 
-const jwtMiddleware = async(req, res, next) => {
+const jwtMiddleware = (req, res, next) => {
     console.log("Verifying token : using JWT middleware");
-    const token = req.headers['authorization']
+    const token = req.headers['authorization'].split(' ')[1]
     console.log(token)
     try {
-        const jwtResponse = await jwt.verify(token,"superscretkey12345")
+        const jwtResponse = jwt.verify(token,"superscretkey12345")
         console.log("==jwtResponse==");
         console.log(jwtResponse)
+        req.payload = jwtResponse.userId;
         next();
     } catch (err) {
         res.status(401).json("Authorization failed, Please Login")
