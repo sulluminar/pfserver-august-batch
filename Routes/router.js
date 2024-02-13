@@ -22,7 +22,7 @@ router.post('/user/login', userController.login)
 router.post('/project/add',jwtMiddleware,multerConfig.single('projectImage'),projectController.addProject)
 
 //4) get home project
-router.get('/project/home-project', jwtMiddleware, projectController.getHomeProjects)
+router.get('/project/home-project', projectController.getHomeProjects)
 
 //5) get all project
 router.get('/project/all-project', jwtMiddleware, projectController.getAllProjects)

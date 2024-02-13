@@ -27,6 +27,11 @@ pfServer.use(express.json())
 // pfServer.use(jwtMiddleware)
 pfServer.use(router)
 
+// export uploads folder
+//1) first argument is the path that need to be used in front-end
+//2) second argumnet is the path of upload folder in server
+pfServer.use('/uploads',express.static('./uploads'))
+
 // 7) define port number
 const PORT = 4000 || process.env.PORT
 
