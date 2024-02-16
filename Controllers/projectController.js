@@ -45,7 +45,17 @@ exports.getHomeProjects = async (req, res) => {
 
 exports.getAllProjects = async (req, res) => {
     try {
-        const allProject = await projects.find()
+        // getting value send as query parameter : req.query.key_name
+        const searchKey = req.query.search;
+        console.log("searchKey=", searchKey)
+        const query = {
+            language: {
+                // create a regular expression
+                // option "i" is give to avoid case sensitive
+                $regex: searchKey, $options: 'i'
+            }
+        }
+        const allProject = await projects.find(query)
         res.status(200).json(allProject)
     }
     catch (err) {
@@ -61,5 +71,41 @@ exports.getUserProject = async (req, res) => {
     }
     catch (err) {
         res.status(401).json("Request failed due to errro:", err)
+    }
+}
+
+exports.editUserProject = async (req, res) => {
+    console.log("==inside edit project")
+    const { id } = req.params;
+    const userId = req.payload;
+    const { title, language, github, website, overview, projectImage } = req.body;
+    const uploadProjectImage = req.file ? req.file.filename : projectImage;
+    try {
+        const updateProject = await projects.findByIdAndUpdate({ _id: id }, {
+            title: title,
+            language: language,
+            github: github,
+            website: website,
+            overview: overview,
+            projectImage: uploadProjectImage,
+            userId: userId
+        },
+            {
+                new: true
+            })
+        await updateProject.save()
+        res.status(200).json("Project updated successfully")
+    } catch (err) {
+        res.status(401).json("Unable to update project due to", err)
+    }
+}
+
+exports.deleteUserProject = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const removeProject = await projects.findByIdAndDelete({_id:id});
+        res.status(200).json("project deleted successfully")
+    } catch (err) {
+        res.status(401).json("Delete project failed", err)
     }
 }
